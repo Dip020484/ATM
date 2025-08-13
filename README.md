@@ -33,7 +33,7 @@ D – Dependency Inversion: high-level code depends on interfaces, not concrete 
 
 
 
-**Tests (JUnit 5)**
+**Tests (JUnit 4)**
 
 ```
 src/test/java/com/example/atm
