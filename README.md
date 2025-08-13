@@ -100,6 +100,7 @@ java -cp target/atm-1.0-SNAPSHOT.jar com.example.atm.CashMachineMain
 | `InvalidAmountException`                | Amount ≤ 0, or not a multiple of the **current** smallest note (as seen when the policy was made) |
 | `InsufficientFundsException`            | Amount > total money in the ATM                                                                  |
 | `UnavailableDenominationsException`     | Amount ≤ balance but can’t be formed with current notes, **or** a race causes `remove()` to fail |
+| `IllegalArgumentException`              | All denominations must be positive multiples of 10 |
 
 
 
