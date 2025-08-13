@@ -31,15 +31,7 @@ I – Interface Segregation: small, focused interfaces.
 
 D – Dependency Inversion: high-level code depends on interfaces, not concrete classes.
 
----
 
-
-```
-
-**Domain values:** `Money`, `DispensePlan`, and typed `Errors`.
-
-
-```
 
 **Tests (JUnit 5)**
 
@@ -116,7 +108,7 @@ java -cp target/atm-1.0-SNAPSHOT.jar com.example.atm.CashMachineMain
 ## Testing
 
 - **Domain** — totals, validation, immutability (`MoneyTest`)  
-- **Strategy** — plan success/failure and guards (`GreedyMinNotesStrategyTest`)  
+- **Strategy** — plan success/failure and guards (`MinNotesStrategyTest`)  
 - **Inventory** — add/remove/snapshot/balance (`InMemoryInventoryTest`)  
 - **Concurrency** — parallel add/remove with timeouts (`InMemoryInventoryConcurrencyTest`)  
 - **Façade** — happy path + all error paths (`CashMachineTest`)
