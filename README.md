@@ -42,24 +42,6 @@ src/test/java/com/example/atm
 ├─ adapters/InMemoryInventoryTest.java
 └─ service/CashMachineTest.java
 ```
-
----
-
-## Quick start
-
-```java
-// CashMachineMain.java
-var inventory = new InMemoryInventory(Map.of(50,2, 20,3, 10,5, 5,10));
-var strategy  = new MinNotesStrategy();
-var policy    = new SmallestDenomDivisibilityPolicy(inventory.denominations());
-
-var atm = new CashMachine(inventory, strategy, policy);
-
-System.out.println("Balance: " + atm.balance());  // e.g., 260
-var notes = atm.withdraw(130);                    // 50x2 + 20x1 + 10x1
-System.out.println(notes.asMap());                // {50=2, 20=1, 10=1}
-```
-
 ---
 
 ## Build & run

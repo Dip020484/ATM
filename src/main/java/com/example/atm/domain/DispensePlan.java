@@ -5,7 +5,7 @@ package com.example.atm.domain;
 
 import java.util.Objects;
 
-/** Immutable result of a dispense strategy. */
+
 public final class DispensePlan {
     private final Money notes;
 

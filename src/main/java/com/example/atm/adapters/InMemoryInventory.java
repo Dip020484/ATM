@@ -8,7 +8,7 @@ import java.util.*;
 import java.util.concurrent.locks.ReentrantLock;
 import java.util.stream.Collectors;
 
-/** Thread-safe in-memory inventory (TreeMap DESC for reporting). */
+/** Thread-safe in-memory inventory */
 public final class InMemoryInventory implements Inventory {
     private final NavigableMap<Integer, Integer> store = new TreeMap<>(Comparator.reverseOrder());
     private final ReentrantLock lock = new ReentrantLock();

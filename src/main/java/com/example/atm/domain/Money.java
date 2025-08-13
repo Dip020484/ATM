@@ -10,7 +10,7 @@ public final class Money {
 
     public Money(Map<Integer, Integer> notes) {
         Objects.requireNonNull(notes, "notes");
-        // Defensive copy + unmodifiable
+
         this.notes = Collections.unmodifiableMap(notes.entrySet().stream()
                 .peek(e -> {
                     if (e.getKey() == null || e.getKey() <= 0) throw new IllegalArgumentException("Invalid denom: " + e.getKey());
