@@ -17,7 +17,7 @@ public class CashMachineMain {
         initial.put(50, 2);
         initial.put(20, 3);
         initial.put(10, 5);
-        initial.put(5,  10);
+
 
         var inventory = new InMemoryInventory(initial);
         var strategy  = new MinNotesStrategy();
