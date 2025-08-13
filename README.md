@@ -46,10 +46,9 @@ D – Dependency Inversion: high-level code depends on interfaces, not concrete 
 ```
 src/test/java/com/example/atm
 ├─ domain/MoneyTest.java
-├─ adapters/GreedyMinNotesStrategyTest.java
+├─ domain/MinNotesStrategyTest.java
 ├─ adapters/InMemoryInventoryTest.java
-├─ adapters/InMemoryInventoryConcurrencyTest.java   // optional
-└─ app/CashMachineTest.java
+└─ service/CashMachineTest.java
 ```
 
 ---
