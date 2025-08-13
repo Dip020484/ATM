@@ -9,7 +9,7 @@ import com.example.atm.ports.DispenseStrategy;
 import java.util.*;
 
 /** Greedy strategy: try highest denominations first; respects limited stock. */
-public final class GreedyMinNotesStrategy implements DispenseStrategy {
+public final class MinNotesStrategy implements DispenseStrategy {
     @Override
     public Optional<DispensePlan> plan(int amount, Map<Integer, Integer> inventory) {
         if (amount <= 0) return Optional.empty();

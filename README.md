@@ -1,39 +1,27 @@
-ATM / CashMachine – Simple, Clean, Testable
-A small Java project that lets an ATM give cash using the fewest notes while respecting limited stock (how many notes are left).
+# ATM / CashMachine — SOLID, Simple, Testable
 
-Built with clean design so it’s easy to change and test.
+> Java 17 project that lets an ATM **dispense cash with the fewest notes** while respecting **limited stock**.  
+> Built with **SOLID**  principles so you can swap algorithms, rules, or storage without breaking the app.
 
-Uses interfaces so you can swap parts without touching the rest.
 
-What this project shows
-Correct results: either gives the exact amount or clearly says why it can’t.
+---
 
-Thread-safe inventory: safe when many actions happen at once.
+## TL;DR
 
-Easy to test: unit tests cover the most important parts.
+- **What it does:** Withdraws an exact amount using **minimum notes** given current stock; or fails with a clear reason.  
+- **Why it’s interesting:** Clean separation of concerns → easy to test and extend (algorithms, policies, storage).  
+- **How to run:** `mvn test` then `java -cp target/… com.example.atm.CashMachineMain` (see details below).
 
-Easy to change: swap the algorithm, rules, or storage.
+---
 
-How it works (in 3 steps)
-Validate the amount
-Check the request is positive and a multiple of the smallest note (e.g., 5).
 
-Plan the notes
-Pick notes from largest to smallest, but never take more than we have.
 
-Apply the plan
-Remove those notes from inventory in a thread-safe way.
+## Key goals
 
-If something goes wrong, it throws a clear error:
-
-InvalidAmountException – bad amount (≤ 0 or not a multiple of the smallest note)
-
-InsufficientFundsException – ATM doesn’t have enough total money
-
-UnavailableDenominationsException – total money is enough, but we can’t make that exact amount with current notes (or stock changed mid-way)
-
-SOLID in simple words
-S – Single Responsibility: each class has one job.
+- **Correctness**: exact amount or a clear error; uses the **fewest notes** possible with current inventory.  
+- **Thread-safety**: safe updates under concurrent access.  
+- **SOLID**:
+- SOLID in simple words S – Single Responsibility: each class has one job.
 
 O – Open/Closed: add new behavior by adding new classes, not by changing old ones.
 
@@ -43,7 +31,102 @@ I – Interface Segregation: small, focused interfaces.
 
 D – Dependency Inversion: high-level code depends on interfaces, not concrete classes.
 
+---
 
-Check the com.example.atm.service.CashMachine.java class for the money withdraw function.
+
+```
+
+**Domain values:** `Money`, `DispensePlan`, and typed `Errors`.
+
+
+```
+
+**Tests (JUnit 5)**
+
+```
+src/test/java/com/example/atm
+├─ domain/MoneyTest.java
+├─ adapters/GreedyMinNotesStrategyTest.java
+├─ adapters/InMemoryInventoryTest.java
+├─ adapters/InMemoryInventoryConcurrencyTest.java   // optional
+└─ app/CashMachineTest.java
+```
+
+---
+
+## Quick start
+
+```java
+// Main.java (snippet)
+var inventory = new InMemoryInventory(Map.of(50,2, 20,3, 10,5, 5,10));
+var strategy  = new GreedyMinNotesStrategy();
+var policy    = new SmallestDenomDivisibilityPolicy(inventory.denominations());
+
+var atm = new CashMachine(inventory, strategy, policy);
+
+System.out.println("Balance: " + atm.balance());  // e.g., 260
+var notes = atm.withdraw(130);                    // 50x2 + 20x1 + 10x1
+System.out.println(notes.asMap());                // {50=2, 20=1, 10=1}
+```
+
+---
+
+## Build & run
+
+**Requirements:** Java 17+
+
+### Maven
+
+```bash
+mvn -q test
+mvn -q package
+java -cp target/atm-1.0-SNAPSHOT.jar com.example.atm.CashMachineMain
+```
+
+
+
+```
+
+---
+
+## How it works
+
+1. **Validate amount** (`AmountPolicy`)  
+   Default rule: amount > 0 and multiple of the **smallest available** note.
+
+2. **Plan notes** (`DispenseStrategy`)  
+   Greedy algorithm: try larger notes first, but never exceed available counts.
+
+3. **Apply plan** (`Inventory`)  
+   Remove the chosen notes atomically. If stock changed, map to a clean domain error.
+
+---
+
+## Errors & rules
+
+| Error                                   | When it happens                                                                                  |
+|-----------------------------------------|---------------------------------------------------------------------------------------------------|
+| `InvalidAmountException`                | Amount ≤ 0, or not a multiple of the **current** smallest note (as seen when the policy was made) |
+| `InsufficientFundsException`            | Amount > total money in the ATM                                                                  |
+| `UnavailableDenominationsException`     | Amount ≤ balance but can’t be formed with current notes, **or** a race causes `remove()` to fail |
+
+
+
+---
+
+## Testing
+
+- **Domain** — totals, validation, immutability (`MoneyTest`)  
+- **Strategy** — plan success/failure and guards (`GreedyMinNotesStrategyTest`)  
+- **Inventory** — add/remove/snapshot/balance (`InMemoryInventoryTest`)  
+- **Concurrency** — parallel add/remove with timeouts (`InMemoryInventoryConcurrencyTest`)  
+- **Façade** — happy path + all error paths (`CashMachineTest`)
+
+> Common gotcha: Expecting `UnavailableDenominationsException` but getting `InsufficientFundsException`.  
+> Ensure the **amount ≤ balance** yet **not buildable** with current notes (e.g., {50×1, 5×2} and ask for 40).
+
+---
+
+
 
 

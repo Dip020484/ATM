@@ -2,7 +2,7 @@ package com.example.atm;
 
 
 
-import com.example.atm.adapters.GreedyMinNotesStrategy;
+import com.example.atm.adapters.MinNotesStrategy;
 import com.example.atm.adapters.InMemoryInventory;
 import com.example.atm.adapters.SmallestDenomDivisibilityPolicy;
 import com.example.atm.service.CashMachine;
@@ -20,7 +20,7 @@ public class CashMachineMain {
         initial.put(5,  10);
 
         var inventory = new InMemoryInventory(initial);
-        var strategy  = new GreedyMinNotesStrategy();
+        var strategy  = new MinNotesStrategy();
         var policy    = new SmallestDenomDivisibilityPolicy(inventory.denominations());
 
         var atm = new CashMachine(inventory, strategy, policy);

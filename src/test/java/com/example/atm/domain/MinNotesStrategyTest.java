@@ -2,7 +2,7 @@ package com.example.atm.domain;
 
 
 
-import com.example.atm.adapters.GreedyMinNotesStrategy;
+import com.example.atm.adapters.MinNotesStrategy;
 
 import com.example.atm.ports.DispenseStrategy;
 import org.junit.jupiter.api.Test;
@@ -12,9 +12,9 @@ import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-class GreedyMinNotesStrategyTest {
+class MinNotesStrategyTest {
 
-    private final DispenseStrategy strategy = new GreedyMinNotesStrategy();
+    private final DispenseStrategy strategy = new MinNotesStrategy();
 
     @Test
     void findsPlanWhenExactCombinationExists() {
