@@ -56,9 +56,9 @@ src/test/java/com/example/atm
 ## Quick start
 
 ```java
-// Main.java (snippet)
+// CashMachineMain.java
 var inventory = new InMemoryInventory(Map.of(50,2, 20,3, 10,5, 5,10));
-var strategy  = new GreedyMinNotesStrategy();
+var strategy  = new MinNotesStrategy();
 var policy    = new SmallestDenomDivisibilityPolicy(inventory.denominations());
 
 var atm = new CashMachine(inventory, strategy, policy);
