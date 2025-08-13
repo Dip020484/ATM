@@ -7,11 +7,15 @@ import com.example.atm.adapters.InMemoryInventory;
 import com.example.atm.adapters.SmallestDenomDivisibilityPolicy;
 import com.example.atm.service.CashMachine;
 import com.example.atm.domain.Money;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.LinkedHashMap;
 import java.util.Map;
 
 public class CashMachineMain {
+
+    private static final Logger logger = LoggerFactory.getLogger(CashMachineMain.class);
     public static void main(String[] args) {
         Map<Integer, Integer> initial = new LinkedHashMap<>();
         initial.put(50, 2);
@@ -25,14 +29,14 @@ public class CashMachineMain {
 
         var atm = new CashMachine(inventory, strategy, policy);
 
-        System.out.println("Initial balance: " + atm.balance());
+        logger.info("Initial balance: " + atm.balance());
 
         var withdrawn = atm.withdraw(130);
-        System.out.println("Dispensed: " + withdrawn);
-        System.out.println("Post-balance: " + atm.balance());
+        logger.info("Dispensed: {} ",withdrawn);
+        logger.info("Post-balance: {} ",atm.balance());
 
         atm.deposit(new Money(Map.of(10, 2, 20, 1)));
-        System.out.println("After deposit balance: " + atm.balance());
+        logger.info("After deposit balance:{}  ",atm.balance());
     }
 }
 

@@ -1,6 +1,8 @@
 package com.example.atm.adapters;
 
 import com.example.atm.ports.AmountPolicy;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import static com.example.atm.errors.Errors.InvalidAmountException;
 
@@ -16,9 +18,11 @@ import java.util.Set;
  * - All denominations must be positive and divisible by 10
  */
 public final class SmallestDenomDivisibilityPolicy implements AmountPolicy {
+    private static final Logger logger = LoggerFactory.getLogger(SmallestDenomDivisibilityPolicy.class);
     private final int smallestDenom;
 
     public SmallestDenomDivisibilityPolicy(Set<Integer> denominations) {
+        logger.info("requested denominations are {} ",denominations);
         Objects.requireNonNull(denominations, "denominations");
         if (denominations.isEmpty()) throw new IllegalArgumentException("No denominations");
 
@@ -37,6 +41,7 @@ public final class SmallestDenomDivisibilityPolicy implements AmountPolicy {
 
     @Override
     public void validate(int amount) {
+        logger.info("requested amount is {} ",amount);
         if (amount <= 0) throw new InvalidAmountException("Amount must be positive");
         if (amount % smallestDenom != 0) {
             throw new InvalidAmountException("Amount must be a multiple of " + smallestDenom);

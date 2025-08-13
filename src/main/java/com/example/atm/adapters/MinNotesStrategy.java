@@ -2,16 +2,23 @@ package com.example.atm.adapters;
 
 
 
+import com.example.atm.CashMachineMain;
 import com.example.atm.domain.DispensePlan;
 import com.example.atm.domain.Money;
 import com.example.atm.ports.DispenseStrategy;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.*;
 
 /** try highest denominations first; respects limited stock. */
 public final class MinNotesStrategy implements DispenseStrategy {
+    private static final Logger logger = LoggerFactory.getLogger(MinNotesStrategy.class);
     @Override
     public Optional<DispensePlan> plan(int amount, Map<Integer, Integer> inventory) {
+
+        logger.info("requested amount is "+amount);
+
         if (amount <= 0) return Optional.empty();
 
         // Sort denominations DESC to minimize note count

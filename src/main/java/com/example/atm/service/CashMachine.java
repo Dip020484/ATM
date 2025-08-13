@@ -2,18 +2,22 @@ package com.example.atm.service;
 
 
 
+import com.example.atm.adapters.SmallestDenomDivisibilityPolicy;
 import com.example.atm.domain.DispensePlan;
 import com.example.atm.domain.Money;
 import com.example.atm.errors.Errors;
 import com.example.atm.ports.AmountPolicy;
 import com.example.atm.ports.DispenseStrategy;
 import com.example.atm.ports.Inventory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.Map;
 import java.util.Objects;
 
 /** Public API that orchestrates validation, planning, and inventory updates. */
 public final class CashMachine {
+    private static final Logger logger = LoggerFactory.getLogger(CashMachine.class);
     private final Inventory inventory;
     private final DispenseStrategy strategy;
     private final AmountPolicy amountPolicy;
@@ -26,12 +30,14 @@ public final class CashMachine {
 
     /** Deposit notes back to inventory. */
     public void deposit(Money money) {
+        logger.info("Depositing money {}",money);
         Objects.requireNonNull(money, "money");
         inventory.add(money.asMap());
     }
 
     /** Attempt to withdraw the exact amount, returns the dispensed notes. */
     public Money withdraw(int amount) {
+        logger.info("Withdrawing amount {}",amount);
         amountPolicy.validate(amount);
 
         if (inventory.balance() < amount) {
