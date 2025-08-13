@@ -31,7 +31,7 @@ public class CashMachineMain {
         System.out.println("Dispensed: " + withdrawn);
         System.out.println("Post-balance: " + atm.balance());
 
-        atm.deposit(new Money(Map.of(10, 2, 5, 1)));
+        atm.deposit(new Money(Map.of(10, 2, 20, 1)));
         System.out.println("After deposit balance: " + atm.balance());
     }
 }
