@@ -5,33 +5,42 @@
 
 
 ---
+## Key Features
 
-## TL;DR
-
-- **What it does:** Withdraws an exact amount using **minimum notes** given current stock; or fails with a clear reason.  
-- **Why it’s interesting:** Clean separation of concerns → easy to test and extend (algorithms, policies, storage).  
-- **How to run:** `mvn test` then `java -cp target/… com.example.atm.CashMachineMain` (see details below).
+- **Minimum notes**: Chooses notes that sum to the amount using as few notes as possible (strategy is swappable).
+- **Respects stock limits**: Only dispenses what the inventory actually has.
+- **Amount rules (policy)**: Amount must be positive and divisible by the **smallest available denomination**. Optional check for **×10 denominations** (10, 20, 50, …).
+- **Thread-safe inventory** (for the in‑memory adapter).
+- **Clear domain exceptions** for predictable error handling.
+- **Easy to test**: Business logic sits behind small interfaces.
 
 ---
+## SOLID (simple)
 
+**S — Single Responsibility**: One class = one job.
+- `CashMachine` only coordinates withdraw/deposit.
+- `MinNotesStrategy` only decides which notes to use.
+- `InMemoryInventory` only stores & updates note counts.
+- `AmountPolicy` (e.g., `SmallestDenomDivisibilityPolicy`) only checks amounts.
+- `Money` only represents notes and totals.
 
+**O — Open/Closed**: Add new things without changing old code.
+- New algorithm? Implement `DispenseStrategy`.
+- New rule? Implement `AmountPolicy`.
+- New storage? Implement `Inventory`.
 
-## Key goals
+**L — Liskov Substitution**: Any implementation can replace the interface and still work.
+- Strategies return a correct plan (or throw expected exceptions).
+- Inventories behave the same for add/remove/balance.
+- Policies either validate or throw `InvalidAmountException`.
 
-- **Correctness**: exact amount or a clear error; uses the **fewest notes** possible with current inventory.  
-- **Thread-safety**: safe updates under concurrent access.  
-- **SOLID**:
-- SOLID in simple words S – Single Responsibility: each class has one job.
+**I — Interface Segregation**: Small, focused interfaces.
+- `DispenseStrategy#plan(...)`, `AmountPolicy#validate(...)`, `Inventory` methods only for inventory.
 
-O – Open/Closed: add new behavior by adding new classes, not by changing old ones.
+**D — Dependency Inversion**: Depend on interfaces, not concrete classes.
+- `CashMachine` takes `Inventory`, `DispenseStrategy`, `AmountPolicy` via constructor.
 
-L – Liskov: any implementation of an interface can be swapped in and still work.
-
-I – Interface Segregation: small, focused interfaces.
-
-D – Dependency Inversion: high-level code depends on interfaces, not concrete classes.
-
-
+---
 
 **Tests (JUnit 4)**
 
